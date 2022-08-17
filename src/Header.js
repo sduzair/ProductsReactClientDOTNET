@@ -4,7 +4,7 @@ import { Nav, Navbar } from 'react-bootstrap'
 import { BsCart } from 'react-icons/bs'
 import CartOffCanvas from './components/CartOffCanvas'
 
-const Header = ({ cart = [] }) => {
+const Header = ({ cart = [], dispatch }) => {
   const [showCart, setShowCart] = useState(false);
   const handleClose = () => setShowCart(false);
   const toggleShow = () => setShowCart((s) => !s);
@@ -21,7 +21,7 @@ const Header = ({ cart = [] }) => {
         <LinkContainer to="/"><Nav.Link>Products</Nav.Link></LinkContainer>
       </div>
       <div>
-        <LinkContainer to="/checkout"><Nav.Link>Checkout</Nav.Link></LinkContainer>
+        <LinkContainer to="/new"><Nav.Link>Add Product</Nav.Link></LinkContainer>
       </div>
         <div style={justifySelfRight}>
           <Nav.Link className="d-flex align-content-center align-items-center"><div onClick={toggleShow}>Cart <BsCart /> ({cart.length})</div>
@@ -30,7 +30,7 @@ const Header = ({ cart = [] }) => {
     </Navbar>
 
       <div>
-        <CartOffCanvas cart={cart} show={showCart} handleClose={handleClose}></CartOffCanvas>
+        <CartOffCanvas cart={cart} dispatch={dispatch} show={showCart} handleClose={handleClose}></CartOffCanvas>
       </div>
     </>
   )
