@@ -1,8 +1,8 @@
 import { Container, Button } from 'react-bootstrap';
 import React, { useEffect, useReducer, useState } from 'react'
 import ProductsContainer from './pages/ProductsPage'
+import NewProductPage from './pages/NewProductPage'
 import Header from './Header'
-import NewProductPage from './NewProductPage'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CartOffCanvas from './components/CartOffCanvas'
 
