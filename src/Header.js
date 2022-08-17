@@ -13,7 +13,7 @@ const Header = ({ cart = [], dispatch }) => {
   };
   return (
     <>
-      <Navbar bg="white" variant="dark" className="justify-content-evenly px-4 mb-5 align-items-end">
+      <Navbar bg="white" variant="dark" className="justify-content-evenly px-4 align-items-end">
       <div>
         <LinkContainer to="/"><Nav.Link className="fs-5">Navbar</Nav.Link></LinkContainer>
       </div>

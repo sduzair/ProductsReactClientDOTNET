@@ -1,10 +1,12 @@
-import { Container, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import React, { useEffect, useReducer, useState } from 'react'
 import ProductsContainer from './pages/ProductsPage'
 import NewProductPage from './pages/NewProductPage'
 import Header from './Header'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import CartOffCanvas from './components/CartOffCanvas'
+import FilterPanel from './components/FilterPanel'
+import SortPanel from './components/SortPanel'
 
 const hardcodedData = [
   {
@@ -228,11 +230,9 @@ const App = () => {
     const getProducts = async () => {
       try {
         const res = await fetch(fetchURI)
-        // console.log(res);
         const data = await res.json();
-        console.log(data);
         dispatchProducts({ type: "FetchSuccess", payload: data })
-        console.log(data);
+        // console.log(data);
       } catch (error) {
         dispatchProducts({ type: "FetchFailure", payload: "Error retreiving products data" })
         // console.log(error)
@@ -266,7 +266,15 @@ const App = () => {
       <Routes>
         <Route exact path="/" element={
           <Container fluid className="mx-auto">
-            {!stateProducts.loading ? stateProducts.error ? stateProducts.error : <ProductsContainer products={stateProducts.products} dispatch={dispatchCart} cart={stateCart} /> : "..loading"}
+            <Row>
+              <Col xs={12} md={2} className='card shadow-0 border rounded-3'>
+                <FilterPanel dispatchProductsURI={dispatchProductsURI} />
+              </Col>
+              <Col xs={12} md={10}>
+                <SortPanel dispatchProductsURI={dispatchProductsURI} />
+                {!stateProducts.loading ? stateProducts.error ? stateProducts.error : <ProductsContainer products={stateProducts.products} dispatch={dispatchCart} cart={stateCart} dispatchProductsURI={dispatchProductsURI} /> : "..loading"}
+              </Col>
+            </Row>
           </Container>
         } />
         <Route path="/new" element={<NewProductPage />} />
@@ -282,6 +290,15 @@ function reducerProductsURI(state, action) {
   switch (action.type) {
     case 'ResetURI':
       return initialProductsURI
+    case 'SortByPriceAscending':
+      return { ...state, sort: "price", sortDirection: 1 }
+    case 'SortByPriceDescending':
+      return { ...state, sort: "price", sortDirection: -1 }
+    case 'SortByRatingDescending':
+      return { ...state, sort: "rating", sortDirection: -1 }
+    case 'ResetURICategory':
+      delete state.category
+      return state
     case "UpdateURICategory":
       return {
         ...state,
@@ -302,10 +319,23 @@ function reducerProductsURI(state, action) {
         ...state,
         sortDirection: action.payload
       }
-    case "UpdateURISkip":
+    case "NextURISkip":
       return {
         ...state,
-        skip: action.payload
+        skip: state.skip + 10
+      }
+    case "PrevURISkip":
+      if (state.skip === 0) {
+        return state
+      }
+      return {
+        ...state,
+        skip: state.skip - 10
+      }
+    case "ResetURISkip":
+      return {
+        ...state,
+        skip: 0
       }
     default:
       throw new Error();
